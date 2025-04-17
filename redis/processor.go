@@ -41,6 +41,19 @@ type Processor struct {
 	logger xlog.Logger
 }
 
+type Opt func(*Processor)
+
+func NewProcessor(opts ...Opt) *Processor {
+	ret := &Processor{
+		logger: xlog.GetLogger(),
+	}
+
+	for _, opt := range opts {
+		opt(ret)
+	}
+	return ret
+}
+
 func (p *Processor) Init(conf yfig.Properties, container bean.Container) error {
 	dss := map[string]*Sources{}
 	err := conf.GetValue(BuildinValueRedisSources, &dss)
